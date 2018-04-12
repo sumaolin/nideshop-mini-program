@@ -1,6 +1,6 @@
 
 <!--index.wxml-->
-<view class="container">
+<view class="container" capture-bind:tap="handlePageTap">
   <swiper class="banner" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
     <swiper-item wx:for="{{banner}}" wx:key="{{item.id}}">
       <navigator url="{{item.link}}">

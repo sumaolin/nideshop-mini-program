@@ -42,10 +42,10 @@
     })
   }
   /*
-  动态插入pre-function函数
-  t 上下文对象
-  a bind 对象t的函数名称
-  e bind 的执行函数
+    动态插入pre-function函数
+    t 上下文对象
+    a bind 对象t的函数名称
+    e bind 的执行函数
   */
   function d(t, a, e) {
     if (t[a]) {
@@ -60,7 +60,12 @@
       }
     }
   }
-  // 在原函数后执行 函数 after-function
+  /** 在原函数后执行 函数 after-function
+   * @param  {} t bind Object
+   * @param  {} a bind Method
+   * @param  {} e bind result
+   * demo: c(t, 'onShareAppMessage', G)
+   */
   function c(t, a, e) {
     if (t[a]) {
       var s = t[a]
@@ -92,12 +97,13 @@
       })
     }
   }
-  // 发起请求接口
   /*
-  t 要发送的信息info
-  e request method
-  n 接口地址
-   */
+    u() 发起请求接口
+    t 要发送的信息info
+    e request method
+    n 接口地址
+    demo:　u(i, 'GET', 'd.html')
+  */
   var u = function(t, e, n) {
     if (typeof arguments[1] === 'undefined') e = 'GET'
     if (typeof arguments[2] === 'undefined') n = 'd.html'
@@ -142,12 +148,16 @@
     }
     u(i, 'GET', 'd.html')
   }
-  // 好像是上报用户位置信息
+  /*
+    h() 自定义ald 事件
+    a messageObj
+    s method name ['event']
+    n level ['ald_share_chain', 'ald_error_message', 'ald_share_click' ]
+    r arguments 参数
+    demo:　h(e, 'event', 'ald_error_message', JSON.stringify(t))
+     h(t, 'event', 'ald_share_click', JSON.stringify(a))
+  */
   var h = function(a, s, n, r) {
-    // a 上下文 context
-    // s method name
-    // n level
-    // r arguments 参数
     if (typeof a['aldstat_showoption'] === 'undefined') {
       a['aldstat_showoption'] = {}
     }
@@ -231,11 +241,22 @@
       }
     }
   }
+  /*
+    bind app unLaunch 添加 duration
+   */
   var w = function() {
     var t = this
     t.aldstat_duration += Date.now() - t.aldstat_showtime
     m(t, 'app', 'unLaunch')
   }
+  /**
+   * v() 通过获取shareTicket 获取分享相关信息
+   * @param  {obj} t messageObj
+   * @param  {string} a shareTicket
+   * @param  {string} e click
+   * demo: v(this, '0', 'click')
+   * v(n, t['shareTickets'][e], 'user')
+   */
   var v = function(t, a, e) {
     if (typeof wx['getShareInfo'] != 'undefined') {
       wx.getShareInfo({
@@ -244,7 +265,7 @@
           h(t, 'event', 'ald_share_' + e, JSON.stringify(a))
         },
         fail: function() {
-          h(t, 'event', 'ald_share_' + e, '1')
+          h(t, 'event', 'ald_share_' + e, '1') //分享错误
         }
       })
     } else {
@@ -252,7 +273,7 @@
     }
   }
   /*
-  App onLaunch
+    bind App onLaunch
    */
   var y = function(t) {
     _() // get 服务器配置
@@ -357,7 +378,9 @@
     }
     m(n, 'app', 'launch')
   }
-
+  /*
+    app onError 上报错误信息
+   */
   var S = function(t, a) {
     var e = this
     if (typeof this.aldstat_error_count === 'undefined') {
@@ -368,8 +391,12 @@
     h(e, 'event', 'ald_error_message', JSON.stringify(t))
   }
   /*
-    简化字段信息 缩写 发送 app 事件： launch, load, hide信息
-   */
+    m() app级别的信息 launch, unLaunch, load, hide产生的信息
+    a messageObject 要发送的信息的信息对象
+    s 'app'
+    o 事件名称 [launch, unLaunch, show, hide]
+    demo: m(t, 'app', 'unLaunch')
+  */
   var m = function(a, s, o) {
     var _ = ''
     try {
@@ -458,6 +485,11 @@
     u(c, 'GET', 'd.html')
   }
 
+  /**
+   * bind app onShow
+   * @param  {option} t 小程序App onShow 中的返回参数
+   * 参考链接： https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/app.html
+   */
   var x = function(t) {
     this.aldstat_showtime = Date.now()
     if (typeof t != 'undefined') {
@@ -488,6 +520,10 @@
       }
     }
   }
+  /*
+    bind app hide
+    add duration 停留时间统计
+  */
   var k = function(t, a) {
     var e = this
     if (e.aldstat_is_first_open) {
@@ -496,6 +532,10 @@
     e.aldstat_duration = Date.now() - e.aldstat_showtime
     m(e, 'app', 'hide')
   }
+  /**
+   * q(t) 判断 t 是否 为Object
+   * @param  {obj} t
+   */
   function q(t) {
     for (var a in t) {
       return false
@@ -513,14 +553,26 @@
     }
     return true
   }
+
+  /**
+   * Page onHide
+   */
   var T = function(t, a) {
     var e = getApp()
     M(e, this, 'hide')
   }
+  /**
+   * Page onUnload
+   */
   var b = function(t, a) {
     var e = getApp()
     M(e, this, 'unload')
   }
+  /**
+   * bind Page onLoad
+   * @param  {Object} t onLoad参数
+   * @param  {} a
+   */
   var A = function(t, a) {
     var e = ''
     try {
@@ -535,6 +587,7 @@
       s.aldstat_src = e
     }
     if (!q(t)) {
+      // t 为 Object 类型
       if (typeof t.aldsrc != 'undefined') {
         if (!e) {
           try {
@@ -553,6 +606,12 @@
     }
     M(s, this, 'load')
   }
+  /**
+   * Page级别 事件的调用
+   * @param  {object} a getApp()
+   * @param  {string} s this MessageObj 全局信息载体
+   * @param  {string} n 事件名称 [load, show, unload, hide]
+   */
   var M = function(a, s, n) {
     var r = ''
     try {
@@ -629,27 +688,47 @@
     a.aldstat_page_last_page = s['__route__']
     u(i, 'GET', 'd.html')
   }
+  /**
+   * Page onShow
+   * @param  {} t
+   * @param  {} a
+   */
   var I = function(t, a) {
     var e = getApp()
     M(e, this, 'show')
   }
+  /**
+   * Page onPullDownRefresh
+   */
   var E = function(t, a) {
     var e = getApp()
     h(e, 'event', 'ald_pulldownrefresh', 1)
   }
+  /**
+    Page onReachBottom
+   */
   var O = function(t, a) {
     var e = getApp()
     h(e, 'event', 'ald_reachbottom', 1)
   }
+  /**
+   * Page onShareAppMessage 点击转发menu 菜单中的转发时触发
+   * Readme ： https://developers.weixin.qq.com/miniprogram/dev/api/share.html#wxgetshareinfoobject
+   * @param  {Array} t
+   * @param  {String} a onShareAppMessage
+   */
   var G = function(t, a) {
+    // console.log('onShareAppMessage')
     var s = this
     var n = getApp()
     if (typeof t == 'undefined') {
       return
     }
     if (typeof t[1] == 'undefined') {
+      // t[1] onShareMessage 的用户配置
       return
     }
+    // r: uuid
     var r = ''
     try {
       r = wx.getStorageSync('aldstat_uuid')
@@ -662,6 +741,7 @@
     } catch (t) {
       i = 'p_share_count_getst'
     }
+    //  o shareChain ald_share_src
     var o = ''
     if (n.ald_share_src === 'undefined' || !n.ald_share_src) {
       try {
@@ -670,6 +750,7 @@
         o = 'ald_share_src_getst'
       }
     } else {
+      // 判断是否包含 当前用户uuid
       o = n.ald_share_src
       var l = o.split(',')
       var _ = true
@@ -682,15 +763,16 @@
       }
       if (l.length >= 3) {
         if (_) {
-          l.shift()
+          l.shift() // why delete first ?
         } else {
         }
-        o = l.toString()
+        o = l.toString() // 自动添加, 链接成字符串
       }
       if (o !== '' && _) {
         o = o + ',' + r
       }
     }
+    // 分享 path 上设置 ald_share_src
     if (!t[1].path || t[1].path === 'undefined') {
       if (e['defaultPath']) {
         t[1].path = e['defaultPath']
@@ -703,7 +785,8 @@
     } else {
       t[1].path += '?ald_share_src=' + o
     }
-    h(n, 'event', 'ald_share_chain', { path: n.aldstat_last_page, chain: o })
+    h(n, 'event', 'ald_share_chain', { path: n.aldstat_last_page, chain: o }) // 调用转发的次数
+    // 统计分享次数
     if (i === '' || typeof i === 'undefined') {
       try {
         wx.setStorageSync(r, 1)
@@ -717,6 +800,7 @@
         wx.setStorageSync(r, i)
       } catch (t) {}
     }
+    // 发送用户信息
     f(function(t) {
       var a = ''
       try {
@@ -727,6 +811,7 @@
       t['userInfo']['uu'] = a
       u(t['userInfo'], 'GET', 'u.html')
     })
+
     var g = t[1]
     if (typeof t[1]['success'] === 'undefined') {
       t[1]['success'] = function(t) {}
@@ -734,13 +819,14 @@
     if (typeof t[1]['fail'] === 'undefined') {
       t[1]['fail'] = function(t) {}
     }
-    var w = t[1]['fail']
-    var y = t[1]['success']
+    var w = t[1]['fail'] // origin fail function
+    var y = t[1]['success'] // origin success function
     t[1]['success'] = function(t) {
+      // t 为微信文档中的option参数
       var a = new Array()
       if (typeof t['shareTickets'] === 'object') {
         for (var e = 0; e < t['shareTickets'].length; e++) {
-          v(n, t['shareTickets'][e], 'user')
+          v(n, t['shareTickets'][e], 'user') //
         }
       }
       h(n, 'event', 'ald_share_status', JSON.stringify(t))
@@ -752,6 +838,10 @@
     }
     return t[1]
   }
+
+  /**
+   * @param  {String} t Page path query 把query转换为Obj
+   */
   var j = function(t) {
     var a = new Object()
     if (t.indexOf('?') != -1) {

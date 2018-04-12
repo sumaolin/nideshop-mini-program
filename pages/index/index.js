@@ -1,6 +1,6 @@
-const util = require('../../utils/util.js');
-const api = require('../../config/api.js');
-const user = require('../../services/user.js');
+const util = require('../../utils/util.js')
+const api = require('../../config/api.js')
+const user = require('../../services/user.js')
 
 //获取应用实例
 const app = getApp()
@@ -14,7 +14,7 @@ Page({
     banner: [],
     channel: []
   },
-  onShareAppMessage: function () {
+  onShareAppMessage: function() {
     return {
       title: 'NideShop',
       desc: '仿网易严选微信小程序商城',
@@ -22,9 +22,9 @@ Page({
     }
   },
 
-  getIndexData: function () {
-    let that = this;
-    util.request(api.IndexUrl).then(function (res) {
+  getIndexData: function() {
+    let that = this
+    util.request(api.IndexUrl).then(function(res) {
       if (res.errno === 0) {
         that.setData({
           newGoods: res.data.newGoodsList,
@@ -34,23 +34,27 @@ Page({
           floorGoods: res.data.categoryList,
           banner: res.data.banner,
           channel: res.data.channel
-        });
+        })
       }
-    });
+    })
   },
-  onLoad: function (options) {
-    this.getIndexData();
+  onLoad: function(options) {
+    this.getIndexData()
   },
-  onReady: function () {
+  onReady: function() {
     // 页面渲染完成
   },
-  onShow: function () {
+  onShow: function() {
     // 页面显示
   },
-  onHide: function () {
+  onHide: function() {
     // 页面隐藏
   },
-  onUnload: function () {
+  onUnload: function() {
     // 页面关闭
   },
+
+  handlePageTap(e) {
+    console.log(e)
+  }
 })
