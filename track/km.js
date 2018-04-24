@@ -75,7 +75,7 @@ var mta = require('../utils/mta_analysis.js')
   var N = App
   App = function(t) {
     d(t, 'onLaunch', preHandleAppOnLaunch)
-    d(t, 'onUnlaunch', preHandleAppOnUnlaunch)
+    d(t, 'onUnlaunch', preHandleAppOnUnlaunch) // 小程序文档中未 说明的函数
     d(t, 'onShow', preHandleAppOnShow)
     d(t, 'onHide', preHandleAppOnHide)
     d(t, 'onError', preHandleAppOnError)
