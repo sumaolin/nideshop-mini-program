@@ -84,21 +84,30 @@ var mta = require('../utils/mta_analysis.js')
 
   var preHandlePageOnLoad = function(opt) {
     mta.Page.init()
+    var a = wx.getSystemInfoSync()
     console.log('pre Handle Page OnLoad')
     console.dir(opt)
   }
 
   var preHandlePageOnUnload = function(opt) {
     console.log('pre Handle Page OnUnload')
+    var path = this['__route__'];
+    console.log(path)
+    wx.setStorageSync('refererPath', path)
   }
 
   var preHandlePageOnShow = function(opt) {
     console.log('pre Handle Page OnShow')
     console.dir(opt)
+    var refererPath = wx.getStorageSync('refererPath')
+    console.log(refererPath)
   }
 
   var preHandlePageOnHide = function() {
     console.log('pre Handle Page OnHide')
+    var path = this['__route__'];
+    console.log(path)
+    wx.setStorageSync('refererPath', path)
   }
 
   var preHandlePageOnReachBottom = function() {
@@ -112,6 +121,8 @@ var mta = require('../utils/mta_analysis.js')
   var handleOnShareAppMessage = function(config) {
     console.log('handle OnShareAppMessage')
     console.dir(config)
+    console.log(this['__route__'])
+    
   }
 
   var J = Page
