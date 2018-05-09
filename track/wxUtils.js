@@ -332,12 +332,12 @@ wxu.sendPageTrack = function(app, s, eventName) {
   if (s[KMC.prefix + 'page_args']) {
     i['ag'] = s[KMC.prefix + 'page_args']
   }
-  if (a[KMC.prefix + 'src']) {
-    i['sr'] = a[KMC.prefix + 'src']
+  if (app[KMC.prefix + 'src']) {
+    i['sr'] = app[KMC.prefix + 'src']
   }
 
-  if (a.refer_share_user) {
-    i['rsu'] = a.refer_share_user
+  if (app.refer_share_user) {
+    i['rsu'] = app.refer_share_user
   }
   wxu.sendRequest(i)
 }
