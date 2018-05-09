@@ -196,25 +196,26 @@ var KMS = {
       }
     }
     // 分享 path 上设置 refer_share_user
-    if (!t[1].path || t[1].path === 'undefined') {
+
+    if (!config[1].path || config[1].path === 'undefined') {
       if (KmConfig['defaultSharePath']) {
-        t[1].path = KmConfig['defaultSharePath']
+        config[1].path = KmConfig['defaultSharePath']
       } else {
-        t[1].path = _this['__route__']
+        config[1].path = _this['__route__']
       }
     }
-    if (t[1].path.indexOf('?') != -1) {
-      t[1].path += '&refer_share_user=' + shareChain
+    if (config[1].path.indexOf('?') != -1) {
+      config[1].path += '&refer_share_user=' + shareChain
     } else {
-      t[1].path += '?refer_share_user=' + shareChain
+      config[1].path += '?refer_share_user=' + shareChain
     }
 
     wxu.sendShareTrack(
       'user_trigger_share',
       {
-        from: t[0].from,
-        path: t[1].path,
-        title: t[1].title, // 转发事件来源。button：页面内转发按钮；menu：右上角转发菜单。https://developers.weixin.qq.com/miniprogram/dev/api/share.html
+        from: config[0].from,
+        path: config[1].path,
+        title: config[1].title, // 转发事件来源。button：页面内转发按钮；menu：右上角转发菜单。https://developers.weixin.qq.com/miniprogram/dev/api/share.html
         pp: wxu.getPagePath(), // 触发分享的页面
         rsu: shareChain, // 分享链接， 后面的是从前面的 uuid 进入的
         sc: userShareCount // 用户分享的次数
@@ -227,16 +228,16 @@ var KMS = {
       config shareSuccess & shareFail
       转发成功 & 失败的 事件： https://developers.weixin.qq.com/miniprogram/dev/api/share.html
     */
-    // var g = t[1]  user shareAppMessage config
-    if (typeof t[1]['success'] === 'undefined') {
-      t[1]['success'] = function(t) {}
+    // var g = config[1]  user shareAppMessage config
+    if (typeof config[1]['success'] === 'undefined') {
+      config[1]['success'] = function(t) {}
     }
-    if (typeof t[1]['fail'] === 'undefined') {
-      t[1]['fail'] = function(t) {}
+    if (typeof config[1]['fail'] === 'undefined') {
+      config[1]['fail'] = function(t) {}
     }
-    var originSAMFail = t[1]['fail'] // origin fail function
-    var originSAMSuccess = t[1]['success'] // origin success function
-    t[1]['success'] = function(t) {
+    var originSAMFail = config[1]['fail'] // origin fail function
+    var originSAMSuccess = config[1]['success'] // origin success function
+    config[1]['success'] = function(t) {
       // t:shareTickets 为微信文档中的 shareTickets参数
       var a = new Array()
       if (typeof t['shareTickets'] === 'object') {
@@ -247,11 +248,11 @@ var KMS = {
       wxu.sendShareTrack('share_status', null, JSON.stringify(t))
       originSAMSuccess(t)
     }
-    t[1]['fail'] = function(t) {
+    config[1]['fail'] = function(t) {
       wxu.sendShareTrack('share_status', null, 'fail')
       originSAMFail(t)
     }
-    return t[1]
+    return config[1]
   }
 
   var J = Page

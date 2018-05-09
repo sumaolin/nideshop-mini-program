@@ -63,7 +63,7 @@ wxu.getSystemInfo = function() {
     system: encodeURIComponent(a.system),
     pl: encodeURIComponent(a.platform),
     fss: a.fontSizeSetting,
-    sdkv: SDKVersion
+    sdkv: a.SDKVersion
   }
 }
 /*
@@ -165,7 +165,7 @@ wxu.sendRequest = function(t, e, n) {
   var i = function() {
     KMS.rq_c += 1
     t['rq_c'] = KMS.rq_c
-    t['d'] = Data.now()
+    t['d'] = Date.now()
     wx.request({
       url: KMC.api_base + '/' + n,
       data: t,
@@ -215,7 +215,7 @@ wxu.sendShareTrack = function(eventName, extendInfo, args) {
     en: eventName
   }
   if (args) {
-    i[s_arge] = args
+    i['s_arge'] = args
   }
 
   if (extendInfo) {
