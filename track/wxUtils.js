@@ -4,7 +4,10 @@ import KMC from './config'
 import kmConfig from './kmConfig'
 // km state 公用状态信息放着
 var KMS = {
-  rq_c: 0
+  rq_c: 0,
+  al_c: 0,
+  as_c: 0,
+  ah_c: 0
 }
 
 var wxu = {}
@@ -230,7 +233,7 @@ wxu.sendShareTrack = function(eventName, extendInfo, args) {
   sendErrorTrack(mes) 发送错误信息
 */
 wxu.sendErrorTrack = function(mes) {
-  var ug = getUserAgent()
+  var ug = wxu.getUserAgent()
 
   var base = wxu.getAppBaseInfo()
   var i = {
@@ -249,14 +252,13 @@ wxu.sendAppTrack = function(app, eventName) {
   if (typeof app[KMC.prefix + 'timestamp'] === 'undefined') {
     app[KMC.prefix + 'timestamp'] = Date.now()
   }
-  var ug = getUserAgent()
-  var base = getAPIBaseInfo()
+  var ug = wxu.getUserAgent()
   var e = {
     et: 'App',
     en: eventName
   }
 
-  var info = Object.assign(ug, base, e)
+  var info = Object.assign(ug, e)
   var c = {
     lopt: app[KMC.prefix + 'launchOpt'],
     showT: app[KMC.prefix + 'showtime'],
@@ -267,15 +269,15 @@ wxu.sendAppTrack = function(app, eventName) {
     ec: app[KMC.prefix + 'error_count'] // ?
   }
   if (eventName === 'launch') {
-    n += 1
+    KMS.al_c += 1
   } else if (eventName === 'show') {
-    r += 1
+    KMS.as_c += 1
   } else {
-    i += 1
+    KMS.ah_c += 1
   }
-  c['alc'] = n
-  c['asc'] = r
-  c['ahc'] = i
+  c['alc'] = KMS.al_c
+  c['asc'] = KMS.as_c
+  c['ahc'] = KMS.ah_c
   if (app.page_share_count && typeof app.page_share_count === 'number') {
     c['sc'] = app.page_share_count
   }
@@ -348,7 +350,7 @@ wxu.sendPageTrack = function(app, s, eventName) {
 wxu.sendCSTrack = function(eventName, message) {
   var i = {
     token: kmConfig['token'],
-    uuid: getUUID(app),
+    uuid: wxu.getUUID(app),
     st: Date.now(),
     et: 'CS', // customer
     en: eventName,
