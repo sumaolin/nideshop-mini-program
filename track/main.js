@@ -84,29 +84,29 @@ var KMS = {
   }
 
   var preHandlePageOnLoad = function(opt) {
-    console.log('pre Handle Page OnLoad')
+    console.log(this['__route__'] + ' pre Handle Page OnLoad')
     console.dir(opt)
   }
 
   var preHandlePageOnUnload = function(opt) {
-    console.log('pre Handle Page OnUnload')
+    console.log(this['__route__'] + ' pre Handle Page OnUnload')
   }
 
   var preHandlePageOnShow = function(opt) {
-    console.log('pre Handle Page OnShow')
+    console.log(this['__route__'] + ' pre Handle Page OnShow')
     console.dir(opt)
   }
 
   var preHandlePageOnHide = function() {
-    console.log('pre Handle Page OnHide')
+    console.log(this['__route__'] + ' pre Handle Page OnHide')
   }
 
   var preHandlePageOnReachBottom = function() {
-    console.log('pre Handle Page OnReachBottom')
+    console.log(this['__route__'] + ' pre Handle Page OnReachBottom')
   }
 
   var preHandlePageOnPullDownRefresh = function() {
-    console.log('pre Handle Page OnPullDownRefresh')
+    console.log(this['__route__'] + ' pre Handle Page OnPullDownRefresh')
   }
 
   /**
@@ -117,7 +117,7 @@ var KMS = {
    * @param  {String} a methoName: onShareAppMessage
    */
   var handleOnShareAppMessage = function(config, methodName) {
-    console.log('handle OnShareAppMessage')
+    console.log(this['__route__'] + ' handle OnShareAppMessage')
     console.log(config)
     var _this = this
     var app = getApp()
