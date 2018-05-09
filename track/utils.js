@@ -95,6 +95,12 @@ _.utf8Encode = function(string) {
   return utftext
 }
 
+_.isArray =
+  Array.isArray ||
+  function(obj) {
+    return toString.call(obj) === '[object Array]'
+  }
+
 _.isObject = function(obj) {
   return obj === Object(obj) && !_.isArray(obj)
 }
