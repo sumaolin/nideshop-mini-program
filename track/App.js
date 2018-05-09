@@ -7,7 +7,7 @@ import KMC from './config'
 var preHandleAppOnLaunch = function(t) {
   this['km'] = new KM(this) // km 实例
 
-  var s = getUUID(this) // 获取当前用户uuid
+  var s = wxu.getUUID(this) // 获取当前用户uuid
   this[KMC.prefix + 'uuid'] = s
   this[KMC.prefix + 'life_token'] = _.random()
   this[KMC.prefix + 'timestamp'] = Date.now()
@@ -24,7 +24,7 @@ var preHandleAppOnLaunch = function(t) {
   }
 
   var d = function() {
-    getWxUserInfo(function(t) {
+    wxu.getWxUserInfo(function(t) {
       // t = wx.getUserInfo
       var a = ''
       try {
@@ -46,14 +46,14 @@ var preHandleAppOnLaunch = function(t) {
  * @param  {option} t 小程序App onShow 中的返回参数
  * 参考链接： https://developers.weixin.qq.com/miniprogram/dev/framework/app-service/app.html
  */
-var preHandlePageOnShow = function(launchOpt) {
+var preHandleAppOnShow = function(launchOpt) {
   this[KMC.prefix + 'showtime'] = Date.now()
   if (typeof launchOpt != 'undefined') {
     this[KMC.prefix + 'launchOpt'] = launchOpt
   } else {
     this[KMC.prefix + 'launchOpt'] = {}
   }
-  var uuid = getUUID(this)
+  var uuid = wxu.getUUID(this)
 
   if (typeof launchOpt != 'undefined') {
     if (typeof launchOpt['shareTicket'] != 'undefined') {
