@@ -109,7 +109,7 @@ wxu.getCustomerInfo = function() {
 
   var cInfo = {}
   for (var i = 0; i < arrKey.length; i++) {
-    cInfo[arrkey[i]] = wx.getStorageSync(KMC.prefix + key)
+    cInfo[arrKey[i]] = wx.getStorageSync(KMC.prefix + arrKey[i])
   }
 
   if (_.isEmptyObject(cInfo)) return false
@@ -169,9 +169,14 @@ wxu.sendRequest = function(t, e, n) {
     KMS.rq_c += 1
     t['rq_c'] = KMS.rq_c
     t['d'] = Date.now()
+
+    var json_data = _.JSONEncode(t)
+    var encoded_data = _.base64Encode(json_data)
+
+    console.log(encoded_data)
     wx.request({
       url: KMC.api_base + '/' + n,
-      data: t,
+      data: encoded_data,
       method: e,
       success: function() {},
       fail: function() {
@@ -212,7 +217,9 @@ wxu.getShareInfoDetail = function(app, st, e) {
 }
 
 wxu.sendShareTrack = function(eventName, extendInfo, args) {
+  var app = getApp()
   var ug = wxu.getUserAgent()
+  var baseInfo = wxu.getAppBaseInfo(app)
   var i = {
     et: 'Share',
     en: eventName
@@ -225,7 +232,7 @@ wxu.sendShareTrack = function(eventName, extendInfo, args) {
     i = Object.assign(i, extendInfo)
   }
 
-  var data = Object.assign(ug, i)
+  var data = Object.assign(ug, baseInfo, i)
 
   wxu.sendRequest(data)
 }
@@ -233,9 +240,9 @@ wxu.sendShareTrack = function(eventName, extendInfo, args) {
   sendErrorTrack(mes) 发送错误信息
 */
 wxu.sendErrorTrack = function(mes) {
+  var app = getApp()
   var ug = wxu.getUserAgent()
-
-  var base = wxu.getAppBaseInfo()
+  var base = wxu.getAppBaseInfo(app)
   var i = {
     et: 'Error',
     err: mes
@@ -253,12 +260,13 @@ wxu.sendAppTrack = function(app, eventName) {
     app[KMC.prefix + 'timestamp'] = Date.now()
   }
   var ug = wxu.getUserAgent()
+  var baseInfo = wxu.getAppBaseInfo(app)
   var e = {
     et: 'App',
     en: eventName
   }
 
-  var info = Object.assign(ug, e)
+  var info = Object.assign(ug, e, baseInfo)
   var c = {
     lopt: app[KMC.prefix + 'launchOpt'],
     showT: app[KMC.prefix + 'showtime'],
@@ -293,7 +301,7 @@ wxu.sendAppTrack = function(app, eventName) {
     c['rsu'] = app.refer_share_user
   }
 
-  Object.assign(info, c)
+  c = Object.assign(info, c)
 
   wxu.sendRequest(c)
 }
@@ -341,26 +349,32 @@ wxu.sendPageTrack = function(app, s, eventName) {
   if (app.refer_share_user) {
     i['rsu'] = app.refer_share_user
   }
-  wxu.sendRequest(i)
+
+  var ug = wxu.getUserAgent()
+  var baseInfo = wxu.getAppBaseInfo(app)
+
+  var info = Object.assign(ug, baseInfo, i)
+  wxu.sendRequest(info)
 }
 
 /*
   发送用户自定义请求
 */
 wxu.sendCSTrack = function(eventName, message) {
+  var app = getApp()
+  var ug = wxu.getUserAgent()
+  var baseInfo = wxu.getAppBaseInfo(app)
   var i = {
-    token: kmConfig['token'],
-    uuid: wxu.getUUID(app),
-    st: Date.now(),
     et: 'CS', // customer
-    en: eventName,
-    v: KMC.version
+    en: eventName
   }
 
   if (message) {
     i['args'] = message
   }
 
-  wxu.sendRequest(i)
+  var data = Object.assign(ug, baseInfo, i)
+
+  wxu.sendRequest(data)
 }
 export default wxu
