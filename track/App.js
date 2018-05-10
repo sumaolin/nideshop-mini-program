@@ -38,7 +38,7 @@ var preHandleAppOnLaunch = function(t) {
   }
   d()
 
-  wxu.sendAppTrack(n, 'app', 'launch')
+  wxu.sendAppTrack(n, 'launch')
 }
 
 /**

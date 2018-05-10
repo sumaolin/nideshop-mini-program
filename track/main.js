@@ -91,7 +91,7 @@ var KMS = {
     }
     d()
 
-    wxu.sendAppTrack(n, 'app', 'launch')
+    wxu.sendAppTrack(n, 'launch')
   }
 
   /*
